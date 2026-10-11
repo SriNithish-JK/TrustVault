@@ -1,0 +1,29 @@
+# Runs on every push / pull request: unit tests, website build, and the full end-to-end suite.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:7
+        ports: ['27017:27017']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: '**/package-lock.json'
+      - run: npm ci --prefix server
+      - run: npm ci --prefix client
+      - name: Unit tests
+        run: npm test --prefix server
+      - name: Build website
+        run: npm run build --prefix client
+      - name: End-to-end tests (105 checks)
+        run: npm run test:e2e --prefix server

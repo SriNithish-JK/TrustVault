@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import mongoose from 'mongoose';
 import config from '../config.js';
 import { httpError } from './util.js';
 
@@ -25,17 +26,27 @@ export function decrypt(buf) {
 export const encryptText = (text) => encrypt(Buffer.from(text)).toString('base64');
 export const decryptText = (text) => decrypt(Buffer.from(text, 'base64')).toString();
 
+// Encrypted files live in server/storage, or in MongoDB (GridFS) when FILE_STORE=db.
 const storage = path.join(config.dataDir, 'storage');
-await fs.mkdir(storage, { recursive: true });
+if (!config.filesInDb) await fs.mkdir(storage, { recursive: true });
+const bucket = () => new mongoose.mongo.GridFSBucket(mongoose.connection.db, { bucketName: 'vault' });
 
 export async function storeFile(buf) {
   const name = `${randomToken(16)}.enc`;
-  await fs.writeFile(path.join(storage, name), encrypt(buf));
+  const data = encrypt(buf);
+  if (config.filesInDb) await new Promise((done, failed) => bucket().openUploadStream(name).on('finish', done).on('error', failed).end(data));
+  else await fs.writeFile(path.join(storage, name), data);
   return name;
 }
 
-export const readFile = async (name) => decrypt(await fs.readFile(path.join(storage, name)));
-export const removeFile = (name) => fs.rm(path.join(storage, name), { force: true });
+export const readFile = async (name) => decrypt(config.filesInDb
+  ? Buffer.concat(await bucket().openDownloadStreamByName(name).toArray())
+  : await fs.readFile(path.join(storage, name)));
+
+export async function removeFile(name) {
+  if (!config.filesInDb) return fs.rm(path.join(storage, name), { force: true });
+  for await (const file of bucket().find({ filename: name })) await bucket().delete(file._id);
+}
 
 // Decrypts a document and proves it still matches the hash recorded at upload.
 export async function openDocument(doc) {

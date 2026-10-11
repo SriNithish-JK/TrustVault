@@ -71,6 +71,7 @@ function TypeFields({ type, setType }) {
     <Field label={field.label} hint={SECTIONS.find((s) => s.types.includes(type)).note}>
       <Input key={type} name="number" required={field.required} className="font-mono" placeholder={field.placeholder} autoComplete="off" />
     </Field>
+    {import.meta.env.VITE_DEMO && <Callout className="text-xs"><b>Demo site.</b> Upload sample documents only, not your real ID.</Callout>}
     {type === 'aadhaar' && <Callout tone="info" className="text-xs">Privacy tip: upload a <b>Masked Aadhaar</b> (only last 4 digits visible) from myaadhaar.uidai.gov.in.</Callout>}
   </>;
 }

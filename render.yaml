@@ -1,0 +1,30 @@
+# Render blueprint: one free web service that serves both the API and the built site. Steps are in DEPLOY.md.
+services:
+  - type: web
+    name: trustvault
+    runtime: node
+    plan: free
+    buildCommand: npm ci --prefix server && npm ci --include=dev --prefix client && npm run build
+    startCommand: npm start
+    healthCheckPath: /welcome
+    envVars:
+      - key: NODE_VERSION
+        value: 24
+      - key: VITE_DEMO
+        value: 1
+      - key: FILE_STORE
+        value: db
+      - key: TRUST_PROXY
+        value: 1
+      - key: JWT_SECRET
+        generateValue: true
+      - key: VAULT_KEY
+        sync: false
+      - key: MONGO_URI
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false

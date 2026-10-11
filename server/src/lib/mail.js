@@ -10,7 +10,7 @@ const devDir = path.join(config.dataDir, 'dev-mail');
 const logoPath = path.join(import.meta.dirname, '..', '..', '..', 'client', 'public', 'icon-192.png');
 const logo = await fs.access(logoPath).then(() => ({ filename: 'trustvault.png', path: logoPath, cid: 'tv-logo' }), () => null);
 
-const layout = (title, body) => `
+const layout = (title, body, logo) => `
 <div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:24px;border:1px solid #e5e7eb;border-radius:14px">
   <table role="presentation" style="margin:0 0 14px;border-collapse:collapse"><tr>
     ${logo ? '<td style="padding:0 10px 0 0"><img src="cid:tv-logo" width="40" height="40" alt="" style="display:block;border-radius:10px"></td>' : ''}
@@ -22,7 +22,16 @@ const layout = (title, body) => `
 </div>`;
 
 export async function sendMail({ to, subject, title = subject, body, attachments = [] }) {
-  const html = layout(title, body);
+  if (config.brevoKey) {
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST', headers: { 'api-key': config.brevoKey, 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(15000),
+      body: JSON.stringify({ sender: { name: 'TrustVault', email: config.mailFrom }, to: [{ email: to }], subject, htmlContent: layout(title, body),
+        ...(attachments.length && { attachment: attachments.map((a) => ({ name: a.filename, content: a.content.toString('base64') })) }) }),
+    });
+    if (!res.ok) throw Object.assign(new Error(`Brevo answered ${res.status}: ${(await res.text()).slice(0, 200)}`), { code: 'EAUTH' });
+    return;
+  }
+  const html = layout(title, body, logo);
   if (transport) return transport.sendMail({ from: `"TrustVault" <${user}>`, to, subject, html, attachments: logo ? [...attachments, logo] : attachments });
 
   // Dev mode (no SMTP configured): "deliver" the email into server/dev-mail/ so the app still works.

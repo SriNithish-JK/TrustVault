@@ -6,6 +6,11 @@ if (!env.JWT_SECRET || !env.VAULT_KEY) {
   process.exit(1);
 }
 
+if (!/^[0-9a-f]{64}$/i.test(env.VAULT_KEY)) {
+  console.error('VAULT_KEY must be 64 hex characters (32 random bytes).');
+  process.exit(1);
+}
+
 export default {
   port: Number(env.PORT || 5000),
   mongoUri: env.MONGO_URI || 'mongodb://127.0.0.1:27017/trustvault',
@@ -13,6 +18,13 @@ export default {
   jwtSecret: env.JWT_SECRET,
   vaultKey: Buffer.from(env.VAULT_KEY, 'hex'),
   smtp: { host: env.SMTP_HOST || 'smtp.gmail.com', port: Number(env.SMTP_PORT || 465), user: env.SMTP_USER, pass: env.SMTP_PASS },
+  // Hosted email over HTTPS (Brevo), for hosts that block SMTP. MAIL_FROM must be a sender verified in Brevo.
+  brevoKey: env.BREVO_API_KEY,
+  mailFrom: env.MAIL_FROM || env.SMTP_USER,
+  // FILE_STORE=db keeps encrypted files in MongoDB, for hosts whose disk is wiped on every restart.
+  filesInDb: env.FILE_STORE === 'db',
+  // Number of proxies in front of the server on a hosting platform (0 = only a local one).
+  trustProxy: Number(env.TRUST_PROXY) || 'loopback',
   sessionMinutes: Number(env.SESSION_MINUTES || 60),
   // Where encrypted files, dev emails and the OCR cache live (tests point this at a temp folder).
   dataDir: env.DATA_DIR || path.join(import.meta.dirname, '..'),

@@ -69,6 +69,8 @@ Without email settings the app runs in dev mode: sign-in codes are printed in th
 | `npm run test:ui` | Opens every page in headless Chrome and signs in through the real screens |
 | `npm run build` | Production build of the site |
 
+To put it on the internet for free, follow [DEPLOY.md](DEPLOY.md).
+
 ---
 
 ## Features

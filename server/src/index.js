@@ -18,7 +18,7 @@ import accessRoutes from './routes/access.js';
 import { startJobs } from './jobs.js';
 
 const app = express();
-app.set('trust proxy', 'loopback');
+app.set('trust proxy', config.trustProxy);
 app.use(helmet({
   contentSecurityPolicy: { directives: { 'img-src': ["'self'", 'data:', 'blob:'], 'frame-src': ["'self'", 'blob:'], 'object-src': ["'self'", 'blob:'] } },
 }));
@@ -49,8 +49,8 @@ app.use((err, req, res, next) => {
   }
   if (err.name === 'CastError') return res.status(404).json({ error: 'Not found.' });
   if (err.code === 'EAUTH') {
-    console.error('Email login failed:', err.message);
-    return res.status(502).json({ error: 'The server could not send email. Check SMTP_USER and SMTP_PASS in server/.env.' });
+    console.error('Email sending failed:', err.message);
+    return res.status(502).json({ error: 'The server could not send email. Check the email settings (SMTP_USER and SMTP_PASS, or BREVO_API_KEY and MAIL_FROM).' });
   }
   if (!err.status) console.error(err);
   res.status(err.status || 500).json(err.status ? { error: err.message, code: err.code } : { error: 'Something went wrong on the server.' });
@@ -64,6 +64,6 @@ try {
 }
 app.listen(config.port, () => {
   console.log(`TrustVault API running on http://localhost:${config.port}`);
-  if (!config.smtp.user) console.log('No SMTP set: emails (and OTP codes) are printed here and saved in server/dev-mail/');
+  if (!config.smtp.user && !config.brevoKey) console.log('No SMTP set: emails (and OTP codes) are printed here and saved in server/dev-mail/');
 });
 startJobs();

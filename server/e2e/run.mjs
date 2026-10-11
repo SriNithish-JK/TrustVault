@@ -36,7 +36,7 @@ const env = {
   ...process.env, PORT: String(PORT), MONGO_URI: MONGO, DATA_DIR: DATA, APP_URL: `http://localhost:${PORT}`,
   JWT_SECRET: crypto.randomBytes(32).toString('hex'), VAULT_KEY: crypto.randomBytes(32).toString('hex'), AUTH_RATE_LIMIT: '1000',
 };
-delete env.SMTP_USER; // never send real email from tests
+delete env.SMTP_USER; delete env.BREVO_API_KEY; delete env.FILE_STORE; // never send real email from tests; files on disk
 const server = spawn(process.execPath, ['src/index.js'], { cwd: path.join(import.meta.dirname, '..'), env });
 let serverLog = '';
 server.stdout.on('data', (d) => { serverLog += d; });

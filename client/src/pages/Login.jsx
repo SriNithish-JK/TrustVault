@@ -193,6 +193,7 @@ export default function Login({ mode = 'login' }) {
         </>)}
 
         {step === 'register' && <>
+          {import.meta.env.VITE_DEMO && <Callout className="text-xs"><b>Demo site.</b> Use it with sample documents only. Do not upload your real ID.</Callout>}
           {invite && <Callout tone="info" className="flex items-start gap-2"><MailCheck className="mt-0.5 size-4 shrink-0" /><span><b>{invite.invitedBy ?? 'An admin'}</b> invited you to join as {invite.role === 'admin' ? 'an' : 'a'} <b>{invite.role}</b>.</span></Callout>}
           <Field label={invite ? 'Full name' : 'Full name (exactly as on your documents)'}><Input name="name" required autoFocus autoComplete="name" /></Field>
           {invite

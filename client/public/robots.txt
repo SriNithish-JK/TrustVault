@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /share/
+Disallow: /reauth
+
+Sitemap: https://trustvault-5lgg.onrender.com/sitemap.xml

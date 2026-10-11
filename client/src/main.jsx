@@ -38,7 +38,7 @@ const only = (roles, page) => <RequireAuth roles={roles}>{page}</RequireAuth>;
 // Every route names itself in `handle.title`; the browser tab shows "Page · TrustVault".
 function PageTitle() {
   const title = useMatches().findLast((m) => m.handle?.title)?.handle.title;
-  useEffect(() => { document.title = title ? `${title} · TrustVault` : 'TrustVault - secure document vault'; }, [title]);
+  useEffect(() => { document.title = title ? `${title} · TrustVault` : 'TrustVault - digital identity and document verification portal'; }, [title]);
   return null;
 }
 
@@ -79,7 +79,7 @@ const router = createBrowserRouter([{
   element: <Root />,
   errorElement: <Crashed />,
   children: [
-    { path: '/welcome', element: <Landing />, handle: { title: 'Welcome' } },
+    { path: '/welcome', element: <Landing /> }, // no short title: search results show the full name
     { path: '/privacy', element: <Privacy />, handle: { title: 'Privacy policy' } },
     { path: '/login', element: <Login mode="login" />, handle: { title: 'Sign in' } },
     { path: '/register', element: <Login mode="register" />, handle: { title: 'Create account' } },

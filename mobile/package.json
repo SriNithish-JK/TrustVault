@@ -1,0 +1,15 @@
+{
+  "name": "trustvault-mobile",
+  "private": true,
+  "description": "Android shell for TrustVault: opens the live site in a full-screen app window.",
+  "scripts": {
+    "sync": "cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3"
+  }
+}

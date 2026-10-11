@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">TrustVault</string>
+    <string name="title_activity_main">TrustVault</string>
+    <string name="package_name">com.trustvault.app</string>
+    <string name="custom_url_scheme">com.trustvault.app</string>
+</resources>

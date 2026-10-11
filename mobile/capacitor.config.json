@@ -1,0 +1,11 @@
+{
+  "appId": "com.trustvault.app",
+  "appName": "TrustVault",
+  "webDir": "www",
+  "backgroundColor": "#000000",
+  "appendUserAgent": "TrustVaultApp",
+  "server": {
+    "url": "https://trustvault-5lgg.onrender.com",
+    "errorPath": "error.html"
+  }
+}

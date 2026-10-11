@@ -386,7 +386,10 @@ export default function Landing() {
 
       <footer className="lp-foot">
         <span className="font-mono text-xs uppercase">TrustVault · AES-256 · SHA-256 ledger · TOTP 2FA</span>
-        <span className="flex gap-6 font-semibold"><Link to="/privacy">Privacy policy</Link><Link to="/verify">Public verifier</Link></span>
+        <span className="flex flex-wrap gap-6 font-semibold">
+          {!navigator.userAgent.includes('TrustVaultApp') && <a href="https://github.com/SriNithish-JK/TrustVault/releases/latest/download/TrustVault.apk">Android app</a>}
+          <Link to="/privacy">Privacy policy</Link><Link to="/verify">Public verifier</Link>
+        </span>
       </footer>
     </div>
   );

@@ -1,13 +1,14 @@
 import { StrictMode, Suspense, lazy, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Outlet, useMatches } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet, useMatches, useRouteError } from 'react-router-dom';
 import { AuthProvider, RequireAuth } from '@/lib/auth';
 import { applyTheme, initialTheme } from '@/lib/theme';
 import { Layout } from '@/components/app/layout';
 import { Toaster, DialogHost } from '@/components/app/kit';
 import { GlowCursor, ClickSounds } from '@/components/app/fx-global';
 import { DoorTransition } from '@/components/app/signin-extras';
-import { PageLoader } from '@/components/app/brand';
+import { PageLoader, LogoMark } from '@/components/app/brand';
+import { Button } from '@/components/ui/button';
 import './index.css';
 
 // Each page is loaded when it is first opened, so the first screen arrives faster.
@@ -55,8 +56,28 @@ function Root() {
   );
 }
 
+// Shown instead of a blank screen when a page crashes or cannot be loaded (for example right after an update).
+function Crashed() {
+  const error = useRouteError();
+  useEffect(() => { console.error(error); }, [error]);
+  return (
+    <main className="grid min-h-dvh place-items-center bg-background p-6 text-center text-foreground">
+      <div className="grid max-w-sm justify-items-center gap-4">
+        <LogoMark size={48} />
+        <h1 className="text-2xl font-semibold tracking-tight">Something went wrong</h1>
+        <p className="text-sm text-muted-foreground">This page could not be shown. Your documents are safe. Reloading usually fixes it.</p>
+        <div className="flex flex-wrap justify-center gap-2">
+          <Button onClick={() => location.reload()}>Reload the page</Button>
+          <Button variant="outline" onClick={() => location.assign('/')}>Go home</Button>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 const router = createBrowserRouter([{
   element: <Root />,
+  errorElement: <Crashed />,
   children: [
     { path: '/welcome', element: <Landing />, handle: { title: 'Welcome' } },
     { path: '/privacy', element: <Privacy />, handle: { title: 'Privacy policy' } },

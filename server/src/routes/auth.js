@@ -95,7 +95,11 @@ r.post('/register', async (req, res) => {
   if (invite && !(await Invite.findOneAndUpdate({ _id: invite._id, usedAt: null, revoked: false }, { usedAt: new Date() }))) {
     throw httpError(400, 'This invitation was already used.');
   }
-  const user = await User.create({ name, email, studentId, passwordHash: await bcrypt.hash(password, 12), consentAt: new Date(), ...(invite && { role: invite.role }) });
+  const user = await User.create({ name, email, studentId, passwordHash: await bcrypt.hash(password, 12), consentAt: new Date(), ...(invite && { role: invite.role }) })
+    .catch(async (err) => { // the account was not created: hand the invitation back so the link still works
+      if (invite) await Invite.updateOne({ _id: invite._id }, { usedAt: null });
+      throw err;
+    });
   await Audit.create({ user: user._id, subject: user._id, action: 'register', ip: req.ip });
   if (invite) await Audit.create({ user: user._id, subject: user._id, action: 'invite.accept', detail: `Joined as ${invite.role}`, ip: req.ip });
   res.status(201).json(await otpStep(user, 'verify'));

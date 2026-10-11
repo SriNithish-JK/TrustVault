@@ -12,7 +12,7 @@ This setup is for **demonstrations with sample documents**. It has one encryptio
 
 ## 1. Database: MongoDB Atlas
 
-1. Sign up at mongodb.com/atlas and create a **free (M0)** cluster.
+1. Sign up at mongodb.com/atlas and create a **free (M0)** cluster in **Singapore** (the same region as the site). Untick "Preload sample dataset".
 2. **Database Access**: add a user with a long random password. Write both down.
 3. **Network Access**: add the address `0.0.0.0/0` (Render's free plan has no fixed address).
 4. **Connect → Drivers**: copy the connection string. Put your password in it and add the database name before the `?`:

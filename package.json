@@ -10,7 +10,8 @@
     "start": "npm start --prefix server",
     "make-admin": "npm run make-admin --prefix server --",
     "test": "npm test --prefix server",
-    "test:e2e": "npm run test:e2e --prefix server"
+    "test:e2e": "npm run test:e2e --prefix server",
+    "test:ui": "node tests/ui/run.mjs"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

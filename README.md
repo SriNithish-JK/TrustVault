@@ -1,10 +1,73 @@
-# TrustVault – Smart Digital Identity & Document Verification Portal
+<div align="center">
 
-A secure web application where students store identity documents (PAN, Aadhaar, marksheets, certificates)
-in an encrypted vault, authorized verifiers validate them, and anyone can confirm a verified document
-by scanning its QR code.
+# TrustVault
 
-**Stack:** React (Vite) · Tailwind CSS · shadcn/ui · Node.js + Express · MongoDB · AES-256-GCM · TOTP (Google Authenticator) · Tesseract OCR
+**Smart digital identity and document verification portal**
+
+Store identity documents in an encrypted vault, have them verified, and let anyone confirm they are genuine by scanning a QR code.
+
+[![CI](https://github.com/SriNithish-JK/TrustVault/actions/workflows/ci.yml/badge.svg)](https://github.com/SriNithish-JK/TrustVault/actions/workflows/ci.yml)
+![End-to-end checks](https://img.shields.io/badge/end--to--end_checks-105-19e6ff)
+![License](https://img.shields.io/badge/license-MIT-b56bff)
+![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-Express-5fa04e?logo=nodedotjs&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-database-47a248?logo=mongodb&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss&logoColor=white)
+
+<img src="docs/screenshots/landing-1-hero.jpg" alt="TrustVault landing page: Your documents. Verified once." width="100%">
+
+</div>
+
+## What it does
+
+- **Encrypted vault.** Every file is locked with AES-256-GCM before it touches the disk. Document numbers are shown masked.
+- **Three-step sign-in.** Password, an email code, then Google Authenticator. A separate 6-digit PIN protects the vault.
+- **Automatic checks.** PAN format, Aadhaar checksum, OCR of the document text and signs of editing, scored out of 100.
+- **Human verification with consent.** A verifier approves or rejects. To open a student's record they must ask, and the student approves for 24 hours.
+- **Proof anyone can check.** A verified document gets a QR code. Scanning it shows the result without an account.
+- **Tamper-evident history.** Uploads and decisions are chained by SHA-256; changing one record breaks the chain.
+
+**Stack:** React (Vite) · Tailwind CSS · shadcn/ui · Motion · Node.js + Express · MongoDB · AES-256-GCM · TOTP · Tesseract OCR
+
+## Screens
+
+| Dashboard | Top navigation |
+|---|---|
+| <img src="docs/screenshots/app-6-dashboard-wide.jpg" alt="Dashboard with identity ring, charts and recent documents"> | <img src="docs/screenshots/app-5-top-menu.jpg" alt="Top navigation with the Privacy menu open"> |
+
+| Documents | Activity timeline |
+|---|---|
+| <img src="docs/screenshots/app-2-documents.jpg" alt="My Documents with verified and pending cards"> | <img src="docs/screenshots/page-3-activity.jpg" alt="Activity log as a timeline with a summary column"> |
+
+| Sign-in | Admin console |
+|---|---|
+| <img src="docs/screenshots/signin-1-welcome-back.jpg" alt="Sign-in with step tracker and welcome-back card"> | <img src="docs/screenshots/admin-1-overview.jpg" alt="Admin overview with charts"> |
+
+| Light theme | Try-it demo |
+|---|---|
+| <img src="docs/screenshots/light-1-dashboard.jpg" alt="Dashboard in the light theme"> | <img src="docs/screenshots/landing-4-demo.jpg" alt="Landing page demo that scans a sample card"> |
+
+More in [`docs/screenshots`](docs/screenshots).
+
+## Quick start
+
+You need **Node.js 24+** and **MongoDB** running locally.
+
+```bash
+git clone https://github.com/SriNithish-JK/TrustVault.git
+cd TrustVault
+npm run setup     # installs everything and creates server/.env with fresh secret keys
+npm run dev       # API on :5000, site on http://localhost:5173
+```
+
+Without email settings the app runs in dev mode: sign-in codes are printed in the terminal and saved in `server/dev-mail/`.
+
+| Command | What it does |
+|---|---|
+| `npm test` | Unit tests |
+| `npm run test:e2e` | 105-check end-to-end test against its own server and database |
+| `npm run test:ui` | Opens every page in headless Chrome and signs in through the real screens |
+| `npm run build` | Production build of the site |
 
 ---
 
@@ -213,3 +276,7 @@ content games/
 - The ledger lives in the same database; a full database administrator could rebuild it. Production systems anchor the latest hash externally (timestamp authority / public chain).
 - One master encryption key in `.env`; production would use a key vault (AWS KMS / Azure Key Vault) with per-file keys and rotation.
 - Runs locally; going live needs HTTPS hosting (e.g. Render + MongoDB Atlas) and backups.
+
+## License
+
+[MIT](LICENSE). See [SECURITY.md](SECURITY.md) to report a vulnerability and [CONTRIBUTING.md](CONTRIBUTING.md) to propose a change.

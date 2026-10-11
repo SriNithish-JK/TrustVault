@@ -6,6 +6,8 @@
 
 Store identity documents in an encrypted vault, have them verified, and let anyone confirm they are genuine by scanning a QR code.
 
+**[Live demo: trustvault-5lgg.onrender.com](https://trustvault-5lgg.onrender.com)** (free hosting: the first visit can take a minute to wake up; use sample documents only)
+
 [![CI](https://github.com/SriNithish-JK/TrustVault/actions/workflows/ci.yml/badge.svg)](https://github.com/SriNithish-JK/TrustVault/actions/workflows/ci.yml)
 ![End-to-end checks](https://img.shields.io/badge/end--to--end_checks-105-19e6ff)
 ![License](https://img.shields.io/badge/license-MIT-b56bff)

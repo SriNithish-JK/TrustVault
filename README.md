@@ -6,7 +6,7 @@
 
 Store identity documents in an encrypted vault, have them verified, and let anyone confirm they are genuine by scanning a QR code.
 
-**[Live demo: trustvault-5lgg.onrender.com](https://trustvault-5lgg.onrender.com)** (free hosting: the first visit can take a minute to wake up; use sample documents only)
+**[Live demo: trustvault-5lgg.onrender.com](https://trustvault-5lgg.onrender.com)** · **[Android app (APK)](https://github.com/SriNithish-JK/TrustVault/releases/latest/download/TrustVault.apk)** (free hosting: the first visit can take a minute to wake up; use sample documents only)
 
 [![CI](https://github.com/SriNithish-JK/TrustVault/actions/workflows/ci.yml/badge.svg)](https://github.com/SriNithish-JK/TrustVault/actions/workflows/ci.yml)
 ![End-to-end checks](https://img.shields.io/badge/end--to--end_checks-105-19e6ff)
@@ -72,6 +72,12 @@ Without email settings the app runs in dev mode: sign-in codes are printed in th
 | `npm run build` | Production build of the site |
 
 To put it on the internet for free, follow [DEPLOY.md](DEPLOY.md).
+
+### Android app
+
+[**Download TrustVault.apk**](https://github.com/SriNithish-JK/TrustVault/releases/latest/download/TrustVault.apk) on an Android phone and tap it to install (Android asks once to allow installing from your browser).
+
+The app is a small shell in [`mobile/`](mobile) that opens the live site full screen, so it always shows the latest version. GitHub builds it: pushing a tag such as `app-v1.1` publishes a new APK. If the site's address changes, update it in `mobile/capacitor.config.json` and `mobile/www/`.
 
 ---
 
